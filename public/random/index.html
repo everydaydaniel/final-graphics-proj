@@ -25,7 +25,9 @@
         socket.send('test message');
       }
       socket.onmessage = function(e) {
-        console.log(e.data);
+        var gameID = e.data;
+        socket.close();
+        window.location = '/game/' + gameID;
       }
     </script>
   </body>

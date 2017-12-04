@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Galaga Team</title>
+    <link rel="stylesheet" href="/styles.css"/>
+    <link href="https://fonts.googleapis.com/css?family=Orbitron" rel="stylesheet"> 
+  </head>
+  <body>
+    <h1>game</h1>
+    <script>
+      var pathSegments = window.location.split('/');
+      var gameID = pathSegments[pathSegments.length - 1];
+      console.log(gameID);
+      var socket = new WebSocket('wss://galaga-team.herokuapp.com/game/'+gameID);
+      // socket.onopen = function() {
+      //   socket.send('test message');
+      // }
+      socket.onmessage = function(e) {
+        console.log(e.data);
+      }
+    </script>
+  </body>
+</html>
