@@ -6,7 +6,7 @@
   <body>
     <button type="button">Start a new game</button>
     <script>
-      var socket = new WebSocket('ws://127.0.0.1:3000/echo');
+      var socket = new WebSocket('ws://galaga-team.herokuapp.com/echo');
       socket.onopen = function() {
         socket.send('test message');
       }

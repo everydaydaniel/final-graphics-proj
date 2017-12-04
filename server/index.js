@@ -4,7 +4,7 @@ var expressWs = require('express-ws')(app);
 var path = require('path');
 
 app.get('/', function(req, res) {
-  res.sendFile(path.resolve(__dirname, '../index.html'));
+  res.sendFile(path.resolve(__dirname, '../public/index.html'));
 });
 
 app.ws('/echo', function(ws, req) {
@@ -13,5 +13,5 @@ app.ws('/echo', function(ws, req) {
   });
 });
 
-app.listen(3000);
-console.log('listening on port 3000');
+app.listen(80);
+console.log('listening on port 80');
