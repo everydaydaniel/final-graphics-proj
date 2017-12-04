@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Galaga Team</title>
+    <link rel="stylesheet" href="/styles.css"/>
+    <link href="https://fonts.googleapis.com/css?family=Orbitron" rel="stylesheet"> 
+  </head>
+  <body>
+    <h1 id="waiting">Finding a teammate</h1>
+    <script>
+      var dots = 0;
+      var waiting = document.getElementById('waiting');
+      var message = waiting.textContent;
+      setInterval(function() {
+        var text = message;
+        dots = (dots + 1) % 5;
+        for (var i = 0; i < dots; i++) {
+          text += '.';
+        }
+        waiting.innerText = text
+      }, 500);
+
+      var socket = new WebSocket('wss://galaga-team.herokuapp.com/match');
+      socket.onopen = function() {
+        socket.send('test message');
+      }
+      socket.onmessage = function(e) {
+        console.log(e.data);
+      }
+    </script>
+  </body>
+</html>

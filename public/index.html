@@ -2,17 +2,15 @@
 <html>
   <head>
     <title>Galaga Team</title>
+    <link rel="stylesheet" href="/styles.css"/>
+    <link href="https://fonts.googleapis.com/css?family=Orbitron" rel="stylesheet"> 
   </head>
   <body>
-    <button type="button">Start a new game</button>
-    <script>
-      var socket = new WebSocket('wss://galaga-team.herokuapp.com/echo');
-      socket.onopen = function() {
-        socket.send('test message');
-      }
-      socket.onmessage = function(e) {
-        console.log(e.data);
-      }
-    </script>
+    <h1>Galaga Team</h1>
+    <div id="start-game">
+        <a class="btn" href="/random/">Play with a random player</a>
+        <hr/>
+        <a class="btn" href="/friend/">Play with a friend</a>
+    </div>
   </body>
 </html>
