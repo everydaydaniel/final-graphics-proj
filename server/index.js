@@ -24,7 +24,7 @@ app.use(function (req, res, next) {
     matching: false,
     inGame: false,
   };
-  next();
+  next(); 
 });
 
 app.ws('/match', function(ws, req) {
