@@ -10,6 +10,7 @@ var publicPath = path.resolve(__dirname, '../public');
 var users = {};
 var randomMatchers = [];
 
+// Sessions
 app.use(session({
   secret: 'keyboard cat',
   resave: false,
@@ -17,16 +18,12 @@ app.use(session({
   cookie: { secure: false }
 }));
 
-app.get('/', function(req, res, next) {
-  console.log(req.session.id);
-  users[req.session.id] = {
+// Create session entries
+app.use(function (req, res, next) {
+  users[req.sessionID] = users[req.sessionID] || {
     matching: false,
     inGame: false,
   };
-  next();
-});
-
-app.get('/random', function(req, res, next) {
   next();
 });
 
