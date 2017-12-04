@@ -27,7 +27,6 @@ app.get('/', function(req, res, next) {
 });
 
 app.get('/random', function(req, res, next) {
-  users[req.session.id].matching = true;
   next();
 });
 
