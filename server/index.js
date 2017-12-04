@@ -30,7 +30,7 @@ app.use(function (req, res, next) {
 app.ws('/match', function(ws, req) {
   if (randomMatchers.length > 0) {  // Players available
     users[randomMatchers[0]].onMatch(req.sessionID);
-    ws.send(randomMatchers.unshift());
+    ws.send(randomMatchers.shift());
   } else {                          // No players available
     users[req.sessionID].onMatch = function (partnerID) {
       ws.send(partnerID);
