@@ -9,7 +9,9 @@
     <h1>game</h1>
     <script>
       var gameID = localStorage.getItem('gameID');
-      var socket = new WebSocket('ws://'+window.location.host+'/game');
+      var socketURL = 'ws'+ (window.location.protocol.indexOf('s') !== -1 ? 's' : '') +
+        '://'+window.location.host+'/game';
+      var socket = new WebSocket(socketURL);
       socket.onopen = function() {
         var msg = { type: 'connect', id: gameID };
         socket.send(JSON.stringify(msg));

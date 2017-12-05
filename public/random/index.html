@@ -20,7 +20,9 @@
         waiting.innerText = text
       }, 500);
 
-      var socket = new WebSocket('ws://'+window.location.host+'/match');
+      var socketURL = 'ws'+ (window.location.protocol.indexOf('s') !== -1 ? 's' : '') +
+        '://'+window.location.host+'/match';
+      var socket = new WebSocket(socketURL);
       socket.onmessage = function(e) {
         var gameID = e.data;
         socket.close();
