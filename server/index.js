@@ -29,19 +29,44 @@ app.use(function (req, res, next) {
   next(); 
 });
 
-app.get('/game', function(req, res) {
-  res.sendFile(path.join(publicPath, 'game/index.html'));
-});
 app.ws('/game', function(ws, req) {
-  ws.send(JSON.stringify(req));
+  ws.onopen = function (e) {
+    console.log('connected');
+  };
+  ws.onmessage = function(e) {
+    var msg = JSON.parse(e.data);
+    var playerID = req.sessionID;
+    switch (msg.type) {
+      case 'connect': 
+        var gameID = msg.id;
+        this.game = games[gameID];
+        if (this.game.players.indexOf(playerID) !== -1) {
+          this.game.sockets.push({
+            ws: ws,
+            player: playerID,
+          });
+        }
+        break;
+      case 'data':
+        this.game.sockets.forEach(function(socket) {
+          console.log(socket.player);
+          console.log(playerID);
+          if (socket.player !== playerID) {
+            socket.ws.send(msg.data);
+          }
+        });
+    }
+  };
 });
 
 app.ws('/match', function(ws, req) {
   if (randomMatchers.length > 0) {  // Players available
     var gameID = uid(4);
     var matchedPlayer = randomMatchers.shift();
+    // Create new game
     games[gameID] = {
-      players: [matchedPlayer, req.sessionID]
+      players: [matchedPlayer, req.sessionID],
+      sockets: [],
     };
 
     users[matchedPlayer].onMatch(gameID);
@@ -52,6 +77,7 @@ app.ws('/match', function(ws, req) {
     };
     randomMatchers.push(req.sessionID);
   }
+    console.log(randomMatchers);
 });
 
 // Serve static files

@@ -8,13 +8,15 @@
   <body>
     <h1>game</h1>
     <script>
-      var pathSegments = window.location.split('/');
-      var gameID = pathSegments[pathSegments.length - 1];
-      console.log(gameID);
-      var socket = new WebSocket('wss://galaga-team.herokuapp.com/game/'+gameID);
-      // socket.onopen = function() {
-      //   socket.send('test message');
-      // }
+      var gameID = localStorage.getItem('gameID');
+      var socket = new WebSocket('ws://'+window.location.host+'/game');
+      socket.onopen = function() {
+        var msg = { type: 'connect', id: gameID };
+        socket.send(JSON.stringify(msg));
+        setInterval(function() {
+          socket.send(JSON.stringify({ type: 'data', data: new Date().getTime() }));
+        }, 1000);
+      }
       socket.onmessage = function(e) {
         console.log(e.data);
       }

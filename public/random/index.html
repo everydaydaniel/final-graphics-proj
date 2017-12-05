@@ -20,14 +20,12 @@
         waiting.innerText = text
       }, 500);
 
-      var socket = new WebSocket('wss://galaga-team.herokuapp.com/match');
-      socket.onopen = function() {
-        socket.send('test message');
-      }
+      var socket = new WebSocket('ws://'+window.location.host+'/match');
       socket.onmessage = function(e) {
         var gameID = e.data;
         socket.close();
-        window.location = '/game/' + gameID;
+        localStorage.setItem('gameID', gameID);
+        window.location = '/game';
       }
     </script>
   </body>
