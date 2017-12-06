@@ -1,9 +1,9 @@
 ArrayList<GamePieces> gamePieces;
 import processing.sound.*;
 SoundFile file;
-
+// test comment 
 void setup() {
-  size(800,800);
+  size(700,700);
   gamePieces = new ArrayList<GamePieces>();
   for (int i = 0; i < 90; i++) {
     new backStars();
