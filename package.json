@@ -1,0 +1,19 @@
+{
+  "name": "group_2_finalproject",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server/index.js",
+  "dependencies": {
+    "express": "^4.16.2",
+    "express-session": "^1.15.6",
+    "express-ws": "^3.0.0",
+    "rand-token": "^0.4.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node server/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
