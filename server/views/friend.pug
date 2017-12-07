@@ -1,0 +1,12 @@
+extends base.pug
+
+block content
+  h1 Play With a Friend
+  div#start-game
+    p Send your code to a friend:
+    p#friend-code #{code}
+    hr
+    form(action="/game" method="post")
+      label(for="enter-code") Enter a friend's code:
+      input(type="text" id="enter-code" name="code" maxlength="6" autofocus)
+      button(type="submit" id="join-game-btn") Join Game

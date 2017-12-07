@@ -33,6 +33,10 @@ body {
   max-width: 100%;
 }
 
+#start-game button {
+  margin: 0 auto;
+}
+
 label {
   display: block;
 }
@@ -50,4 +54,21 @@ hr::after {
   top: -5px;
   padding: 0 5px;
   font-size: 0.8em;
+}
+
+input {
+  background: black;
+  outline: none;
+  color: white;
+  border: 3px solid white;
+  padding: 1em;
+  font-family: inherit;
+}
+
+#join-game-btn {
+  display: inline;
+}
+
+#friend-code {
+  margin-top: 1em;
 }

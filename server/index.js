@@ -4,13 +4,24 @@ var expressWs = require('express-ws')(app);
 var session = require('express-session');
 var uid = require('rand-token').uid;
 var path = require('path');
+var bodyParser = require('body-parser');
 
 var port = process.env.PORT || 8080;
 var publicPath = path.resolve(__dirname, '../public');
 
+// Faux-DB
 var users = {};
 var randomMatchers = [];
 var games = {};
+
+// Set up pug renderer
+app.set('view engine', 'pug');
+app.set('views', 'server/views');
+
+app.use( bodyParser.json() );       // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+  extended: true
+})); 
 
 // Sessions
 app.use(session({
@@ -29,6 +40,23 @@ app.use(function (req, res, next) {
   next(); 
 });
 
+// Routes
+app.get('/', function(req, res ,next) {
+  res.render('index');
+});
+app.get('/friend', function(req, res, next) {
+  var code = uid(6);
+  res.render('friend', { title: 'Play With a Friend', code: code });
+});
+app.get('/random', function(req, res, next) {
+  res.render('random', { title: 'Finding a Teammate' });
+});
+app.post('/game', function(req, res, next) {
+  console.log(req.body);
+  res.render('game', { title: 'Play' });
+});
+
+// Sockets
 app.ws('/game', function(ws, req) {
   ws.onopen = function (e) {
     console.log('connected');
@@ -83,5 +111,6 @@ app.ws('/match', function(ws, req) {
 // Serve static files
 app.use(express.static(publicPath));
 
+// Start the server
 app.listen(port);
 console.log('listening on port ' + port);
