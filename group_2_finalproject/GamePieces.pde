@@ -138,6 +138,7 @@ class LaserBullet extends GamePieces {
 }
 class backStars extends GamePieces {
   float speed;
+  float R;
   backStars() {
     xpos = random(width);
     ypos = random(height);
@@ -156,5 +157,20 @@ class backStars extends GamePieces {
   void display() {
     fill(255, map(wdth, 2, 5, 255/2, 255));
     rect(xpos, ypos, wdth, ht);
+    stroke(255);
+    pushMatrix();
+      translate(xpos+2,ypos+2);
+      rotate(-R);
+      line(0,5,0,-5);
+      line(-5,0,5,0);
+    popMatrix();
+    pushMatrix();
+      translate(xpos+2,ypos+2);
+      rotate(-R);
+      line(0,5,0,-5);    
+      line(-5,0,5,0);
+    popMatrix();
+    R = R + 0.06;
+    noStroke();
   }
 }
