@@ -2,4 +2,7 @@ extends base.pug
 
 block content
     h1 game
+    script.
+        //- Give game code to client
+        var gameID = "#{code}";     
     script(src="/game.js" defer)

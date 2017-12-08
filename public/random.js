@@ -1,3 +1,4 @@
+// Fancy progress animation
 var dots = 0;
 var waiting = document.getElementById('waiting');
 var message = waiting.textContent;
@@ -10,12 +11,13 @@ setInterval(function() {
   waiting.innerText = text;
 }, 500);
 
+// Wait for a match
 var socketURL = 'ws'+ (window.location.protocol.indexOf('s') !== -1 ? 's' : '') +
   '://'+window.location.host+'/match';
 var socket = new WebSocket(socketURL);
+
+// Friend connected to our game
 socket.onmessage = function(e) {
-  var gameID = e.data;
   socket.close();
-  localStorage.setItem('gameID', gameID);
-  window.location = '/game';
+  document.getElementById('redirect-form').submit();
 };

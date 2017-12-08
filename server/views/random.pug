@@ -3,4 +3,8 @@ extends base.pug
 block content  
   h1 Get Ready!
   h2#waiting Finding a teammate
+
+  form#redirect-form(action="/game" method="post")
+    input#code-input(type="hidden" name="code")
+
   script(src="/random.js" defer)

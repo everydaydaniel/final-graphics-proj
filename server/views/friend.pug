@@ -5,8 +5,20 @@ block content
   div#start-game
     p Send your code to a friend:
     p#friend-code #{code}
+
     hr
+    
+    // Form for joining a game
     form(action="/game" method="post")
       label(for="enter-code") Enter a friend's code:
       input(type="text" id="enter-code" name="code" maxlength="6" autofocus)
+      input(type="hidden" name="unusedCode" value="#{code}")
       button(type="submit" id="join-game-btn") Join Game
+
+    // Form used when someone joins your game
+    form#redirect-form(action="/game" method="post")
+      input#code-input(type="hidden" name="code" value="#{code}")
+      
+    script.
+      var gameID = "#{code}";
+    script(src="/friend.js" defer)

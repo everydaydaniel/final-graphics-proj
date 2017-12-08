@@ -1,10 +1,9 @@
-var gameID = localStorage.getItem('gameID');
-
 var socketURL = 'ws'+ (window.location.protocol.indexOf('s') !== -1 ? 's' : '') +
   '://'+window.location.host+'/game';
 var socket = new WebSocket(socketURL);
 
 socket.onopen = function() {
+  // gameID is hydrated on the server
   var msg = { type: 'connect', id: gameID };
   socket.send(JSON.stringify(msg));
   setInterval(function() {
