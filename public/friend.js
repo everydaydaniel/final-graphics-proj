@@ -8,6 +8,5 @@ socket.onopen = function() {
 
 socket.onmessage = function(e) {
   socket.close();
-  document.getElementById('code-input').setAttribute('value', gameID);
   document.getElementById('redirect-form').submit();
 };

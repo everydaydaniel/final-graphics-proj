@@ -19,5 +19,7 @@ var socket = new WebSocket(socketURL);
 // Friend connected to our game
 socket.onmessage = function(e) {
   socket.close();
+  var gameID = e.data;
+  document.getElementById('code-input').setAttribute('value', gameID);
   document.getElementById('redirect-form').submit();
 };

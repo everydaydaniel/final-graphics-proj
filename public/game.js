@@ -12,5 +12,13 @@ socket.onopen = function() {
 };
 
 socket.onmessage = function(e) {
-  console.log(e.data);
+  var msg = JSON.parse(e.data);
+  switch(msg.type) {
+    case 'data':
+      console.log(msg.data);
+      break;
+    case 'disconnect':
+      alert('Your teammate disconnected!');
+      break;
+  }
 };

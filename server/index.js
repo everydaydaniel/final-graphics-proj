@@ -36,10 +36,46 @@ var users = {};
 var randomMatchers = [];
 var friendMatchers = {};
 var games = {};
-function Game(players) {
+function Game(players, id) {
+  this.id = id || uid(6);
+  games[this.id] = this;
   this.players = players || [];
   this.sockets = [];
 }
+Game.prototype.connect = function(playerID, socket) {
+  if (this.players.indexOf(playerID) !== -1) {
+    this.sockets.push({
+      ws: socket,
+      player: playerID,
+    });
+  }
+};
+Game.prototype.disconnect = function(playerID) {
+  this.sockets = this.sockets.filter(function(socket) {
+    return socket.player !== playerID;
+  });
+
+  if (this.sockets.length === 0) {  // Cue game for garbage collection
+    delete games[this.id];
+    console.log('Game ' + this.id + ' destroyed.');
+  } else {
+    this.sockets.forEach(function(socket) {
+      socket.ws.send(JSON.stringify({ type: 'disconnect' }));
+    });    
+  }
+};
+Game.prototype.send = function(senderID, data) {
+  this.sockets.forEach(function(socket) {
+    if (socket.player !== senderID) {
+      try {
+        socket.ws.send(JSON.stringify({ type: 'data', data: data }));
+      } catch(err) {
+        console.warn('Sending data to ' + socket.player + ' failed:');
+        console.warn(err.message);
+      }
+    }
+  });
+};
 
 // Set up pug renderer
 app.set('view engine', 'pug');
@@ -80,10 +116,10 @@ app.get('/random', function(req, res, next) {
 });
 app.post('/game', function(req, res, next) {
   var code = req.body.code;
-  // Joining a friend match
-  if (friendMatchers.hasOwnProperty(code)) {
+  if (friendMatchers.hasOwnProperty(code)) {    // Joining a friend match
+    console.log('creating friend match ' + code);
     // Create game
-    games[code] = new Game([req.sessionID, friendMatchers[code].id]);
+    var game = new Game([req.sessionID, friendMatchers[code].id], code);
     // Notify game creator (message doesn't matter)
     friendMatchers[code].socket.send('ready');
     // Cleanup game creator code
@@ -92,8 +128,15 @@ app.post('/game', function(req, res, next) {
     if (req.body.hasOwnProperty('unusedCode')) {
       delete friendMatchers[req.body.unusedCode];
     }
+  } else if (!code || !games.hasOwnProperty(code)) { // Game not found
+    console.log('game not found, redirecting')
+    res.redirect('/');
+    return;
   }
   res.render('game', { title: 'Game', code: code });
+});
+app.get('/game', function(req, res) {
+  res.redirect('/');
 });
 
 // Sockets
@@ -105,20 +148,14 @@ app.ws('/game', function(ws, req) {
       case 'connect': 
         var gameID = msg.id;
         this.game = games[gameID];
-        if (this.game.players.indexOf(playerID) !== -1) {
-          this.game.sockets.push({
-            ws: ws,
-            player: playerID,
-          });
-        }
+        this.game.connect(playerID, ws);
         break;
       case 'data':
-        this.game.sockets.forEach(function(socket) {
-          if (socket.player !== playerID) {
-            socket.ws.send(msg.data);
-          }
-        });
+        this.game.send(playerID, msg.data);
     }
+  };
+  ws.onclose = function() {
+    this.game.disconnect(req.sessionID);
   };
 });
 
@@ -127,12 +164,11 @@ app.ws('/match', function(ws, req) {
   if (randomMatchers.length > 0) {  // Players available
     var matchedPlayer = randomMatchers.shift();
     // Create new game
-    var gameID = uid(6);
-    games[gameID] = new Game([matchedPlayer, req.sessionID]);
+    var game = new Game([matchedPlayer, req.sessionID]);
 
     // Alert players 
-    users[matchedPlayer].onMatch(gameID);
-    ws.send(gameID);
+    users[matchedPlayer].onMatch(game.id);
+    ws.send(game.id);
   } else {                          // No players available
     users[req.sessionID].onMatch = function (gameID) {
       ws.send(gameID);
