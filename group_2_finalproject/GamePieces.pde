@@ -3,7 +3,7 @@ class GamePieces {
   float ypos;
   float wdth;
   float ht;
-  
+  boolean isLaserBullet;
   
   void update(){
   }
@@ -23,6 +23,7 @@ class SpaceShip extends GamePieces {
   PImage SpaceShipImg;
   
   SpaceShip(boolean isMine_) {
+    isLaserBullet = false;
     isMine = isMine_;
     wdth = 30;
     ht = 30;
@@ -85,6 +86,7 @@ class SpaceShip extends GamePieces {
    reloadTimer++;
    if (health <= 0) {
      gamePieces.remove(this);
+     gamePieces.add(new SpaceShip(false));
    }
   }
   
@@ -97,6 +99,11 @@ class SpaceShip extends GamePieces {
   
   void display() {
     image(SpaceShipImg, xpos, ypos, 60, 60);
+    if (isMine) {
+      rect(30, 30, map(health, 0, 100, 0, wdth), 3);
+    } else {
+      rect(xpos, ypos - 3, map(health, 0, 100, 0, wdth), 3);
+    }
   }
 }
 class LaserBullet extends GamePieces {
@@ -108,6 +115,7 @@ class LaserBullet extends GamePieces {
     ht = 20;
     direction = direction_;
     gamePieces.add(this);
+    isLaserBullet = true;
   }
   
   void update() {
@@ -116,14 +124,14 @@ class LaserBullet extends GamePieces {
       boolean shotX = false;
       boolean shotY = false;
       
-      if ((xpos > gp.xpos && xpos < gp.xpos + gp.wdth) || (xpos + wdth > gp.xpos && xpos + wdth < gp.xpos + gp.xpos)) {
+      if ((xpos > gp.xpos + 10 && xpos < gp.xpos + gp.wdth + 10) || (xpos + wdth > gp.xpos + 10 && xpos + wdth < gp.xpos + gp.xpos + 10) && (gp.isLaserBullet == true)) {
         shotX = true;
       }
-      if ((ypos > gp.ypos && ypos < gp.ypos + gp.ht) || (ypos + ht > gp.ypos && ypos + ht < gp.ypos + gp.ypos)) {
+      if ((ypos > gp.ypos && ypos < gp.ypos + gp.ht) || (ypos + ht > gp.ypos && ypos + ht < gp.ypos + gp.ypos) && (gp.isLaserBullet == true)) {
         shotY = true;
       }
       if (shotX && shotY && gp instanceof SpaceShip) {
-        ((SpaceShip) gp).health -= 1;
+        ((SpaceShip) gp).health -= 10;
       }
     }
     if (ypos < -ht || ypos > height) {
@@ -146,6 +154,7 @@ class backStars extends GamePieces {
     ht = wdth;
     speed = wdth;
     gamePieces.add(this);
+    isLaserBullet = false;
   }
   void update() {
     ypos += speed;
