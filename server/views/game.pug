@@ -1,8 +1,11 @@
 extends base.pug
 
 block content
-    h1 game
     script.
         //- Give game code to client
-        var gameID = "#{code}";     
+        var gameID = "#{code}";
+    script(src="/libraries/p5.js" defer)
+    script(src="/libraries/p5.dom.js" defer)
+    script(src="/libraries/p5.sound.js" defer)
+    script(src="/galaga.js" defer)
     script(src="/game.js" defer)
