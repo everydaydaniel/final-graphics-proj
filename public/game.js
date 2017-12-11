@@ -7,21 +7,29 @@ socket.onopen = function() {
   var msg = { type: 'connect', id: gameID };
   socket.send(JSON.stringify(msg));
   setInterval(function() {
-    socket.send(JSON.stringify({ type: 'data', data: {
+    var data = {
       xpos: myShip ? myShip.xpos : 0,
+      dead: myShip ? myShip.dead : false,
       enemies: enemies.map(function(enemy) {
         return { xpos: enemy.xpos, ypos: enemy.ypos }
-      })
-    }}));
-  }, 20);
+      }),
+      shot: justShot,
+    };
+    justShot = false;
+    socket.send(JSON.stringify({ type: 'data', data: data }));
+  }, 10);
 };
 
 socket.onmessage = function(e) {
   var msg = JSON.parse(e.data);
   switch(msg.type) {
     case 'data':
-      console.log(msg);
       theirShip.xpos = msg.data.xpos;
+      theirShip.dead = msg.data.dead;
+      if (msg.data.shot) {
+        console.log('shoot')
+        theirShip.shoot();
+      }
       break;
     case 'disconnect':
       alert('Your teammate disconnected!');
@@ -35,6 +43,7 @@ var f;
 var goodShip, badShip;
 var difficulty = 1;
 var level = 1;
+var justShot = true;
 function preload() {
   // preload the ship images
   badShip = loadImage("/assets/Enemy_Ship.png");
@@ -72,7 +81,7 @@ function draw() {
   }
 
   for (var i = 0; i < gamePieces.length; i++) {
-    if (gamePieces[i].dead == false) {
+    if (gamePieces[i].dead === false) {
       gamePieces[i].update();
       gamePieces[i].display();
     }

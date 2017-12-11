@@ -24,7 +24,6 @@ function SpaceShip(isPlayer, isRemote) {
     // add to the gamePieces array.
     gamePieces.push(this);
 
-
     // if it is an enemy ship.
   } else {
     this.ypos = this.ht;
@@ -52,20 +51,20 @@ function SpaceShip(isPlayer, isRemote) {
     // }
     // check if it is a players game Piece
     if (this.isPlayer) {
-      if (keyIsPressed === true && !this.isRemote) {
+      if (!this.isRemote) {
 
-        if (keyCode == RIGHT_ARROW && this.xpos < width - 60) {
+        if (keyIsDown(RIGHT_ARROW) && this.xpos < width - 60) {
 
           this.xpos += this.speed;
           // console.log(this.xpos);
 
-        } else if (keyCode == LEFT_ARROW && this.xpos > 0) {
+        } else if (keyIsDown(LEFT_ARROW) && this.xpos > 0) {
           this.xpos -= this.speed;
           // console.log(this.xpos);
         }
       }
       // handle shooting here 32 == spacebar
-      if (!this.isRemote && (mouseIsPressed || keyIsPressed && keyCode == 32)) {
+      if (!this.isRemote && (mouseIsPressed || keyIsDown(32))) {
         this.shoot();
       }
     }
@@ -90,11 +89,14 @@ function SpaceShip(isPlayer, isRemote) {
   }
   // shoot the bullet boi
   this.shoot = function() {
-    if (this.reloadTimer > this.reloadTimerMax) {
+    if (this.reloadTimer > this.reloadTimerMax || this.isRemote) {
       // new laser LaserBullet
+      if (!this.isRemote && this.isPlayer) {
+        justShot = true;
+        console.log(justShot)
+      }
       new LaserBullet(this.xpos, this.ypos, this.direction, this.isPlayer);
       this.reloadTimer = 0;
-      // console.log("Shoot");
     }
 
   }
@@ -229,12 +231,11 @@ function backStars() {
 
 function allDead(arr) {
   for (var i = 0; i < arr.length; i++) {
-
-    if (arr[i].dead == false) {
+    if (arr[i].dead === false) {
       return false;
     }
-    return true;
   }
+  return true;
 }
 
 function newLevel() {
