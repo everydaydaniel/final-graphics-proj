@@ -100,13 +100,14 @@ function SpaceShip(isMine) {
 
   // display the ship
   this.display = function() {
-    image(this.SpaceShipImg, this.xpos, this.ypos, 60, 60);
 
-    if (this.isMine){
-      
+    image(this.SpaceShipImg, this.xpos, this.ypos, 60, 60);
+    // rect(this.xpos + 13, this.ypos + 5, 37, 40);
+
+    if (this.isMine) {
+
       rect(30, 30, map(this.health, 0, 100, 0, this.wdth), 3);
-    }
-    else{
+    } else {
       rect(this.xpos, this.ypos - 3, map(this.health, 0, 100, 0, this.wdth), 3);
     }
   }
@@ -146,12 +147,12 @@ function LaserBullet(xpos, ypos, direction, isMine) {
         let shotY = false;
         let gp = this.targets[i];
 
-        if ((this.xpos > gp.xpos + 10 && this.xpos < gp.xpos + gp.wdth + 10) ||
-          (this.xpos + this.wdth > gp.xpos + 10 &&
-            this.xpos + this.wdth < gp.xpos + gp.xpos + 10)) {
+        if ((this.xpos > this.xpos + 13 && this.xpos < gp.xpos + 37) ||
+          (this.xpos + this.wdth > gp.xpos + 13 &&
+            this.xpos + this.wdth < gp.xpos + 37)) {
           shotX = true;
         }
-        if ((this.ypos > gp.ypos && this.ypos < gp.ypos + gp.ht) || (this.ypos + this.ht > gp.ypos && this.ypos + this.ht < gp.ypos + gp.ypos)) {
+        if ((this.ypos > gp.ypos && this.ypos < gp.ypos + 40) || (this.ypos + this.ht > gp.ypos && this.ypos + this.ht < gp.ypos + 40)) {
           shotY = true;
         }
         if (shotX && shotY) {
@@ -238,13 +239,19 @@ function allDead(arr) {
 
 function newLevel() {
   enemies = [];
-  difficulty += .15;
-  for (var i = 0; i < 4; i++) {
+  difficulty += .05;
+
+  for (var i = 0; i < int(random(2, 6)); i++) {
     new SpaceShip(false);
   }
+  // revive with health
   for (var i = 0; i < gamePieces.length; i++) {
     gamePieces[i].health = 300;
+    gamePieces[i].dead = false;
   }
+}
 
-
+function gameOver(){
+  textSize(30);
+  text('GAME OVER YOU MADE IT TO LEVEL ' + level, 25,300);
 }

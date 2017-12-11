@@ -3,15 +3,20 @@ var t;
 var f;
 var goodShip, badShip;
 var difficulty = 1;
-
+var level = 1;
 function preload() {
   // preload the ship images
   badShip = loadImage("assets/Enemy_Ship.png");
   goodShip = loadImage("assets/Galaga_Ship.png");
+  // load sound
+  soundFormats("mp3");
+  song = loadSound("assets/Galaga_Music.mp3");
 }
 
 function setup() {
   createCanvas(600, 600);
+  song.setVolume(.01);
+  song.play();
   t = new SpaceShip(true);
   for (var i = 0; i < 1; i++) {
     new SpaceShip(false);
@@ -46,6 +51,10 @@ function draw() {
 	if (allDead(enemies)){
     console.log(difficulty)
 		newLevel();
+		level += 1;
+	 }
+	 if (allDead(gamePieces)){
+		 gameOver();
 	 }
   for (var i = 0; i < enemies.length; i++) {
     if (enemies[i].dead == false) {
