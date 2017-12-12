@@ -105,10 +105,12 @@ function SpaceShip(isMine) {
     // rect(this.xpos + 13, this.ypos + 5, 37, 40);
 
     if (this.isMine) {
-
-      rect(30, 30, map(this.health, 0, 100, 0, this.wdth), 3);
+      // console.log("In is mine disp");
+      fill(0,255,0);
+      rect(30, 30, map(this.health, 0, 100, 0, 50), 3);
     } else {
-      rect(this.xpos, this.ypos - 3, map(this.health, 0, 100, 0, this.wdth), 3);
+      fill(0,255,0);
+      rect(this.xpos + 15, this.ypos - 3, map(this.health, 0, 100, 0, 20), 3);
     }
   }
 
