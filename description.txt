@@ -1,0 +1,15 @@
+For our final project we created galaga and tried to implement online
+multiplayer capabilities.
+
+Here are the instructions
+
+To run the local game you must
+start a server on ../final-graphics-proj/socketsTut/public
+Once you've started the server the game should be available on
+whatever port you started the server on.
+
+I used a node.js package called http-server. 
+
+To use the online version visit https://galaga-team.herokuapp.com/
+play with people from different machines, if you open two tabs the networking
+capability doesn't work.
